@@ -41,7 +41,7 @@ socketname=/var/run/renderd/renderd.sock
 num_threads=4
 
 [mapnik]
-plugins_dir=/usr/lib/mapnik/2.0/input
+plugins_dir=/usr/lib/mapnik/2.2/input
 font_dir=/usr/share/fonts/truetype/ttf-dejavu
 font_dir_recurse=false
 
@@ -54,6 +54,7 @@ for style in `ls ./styles/`; do
 URI=/$style/
 XML=$STYLES_PATH/$style/$style.xml
 DESCRIPTION=$style
+MAXZOOM=20
 
 _EOF_
 done;

@@ -87,6 +87,8 @@ RUN shapeindex --shape_files \
 # Deploy map styles...
 # RUN mkdir -p $STYLES_PATH && cp -R styles/* $STYLES_PATH
 
+COPY httpd-foreground /usr/local/bin/
+
 EXPOSE 80
 
 CMD ["httpd-foreground"]

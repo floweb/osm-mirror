@@ -1,0 +1,5 @@
+EXTENT=-167.7,-59.4,194.8,85.1
+DB_HOST=osm-db
+DB_NAME=osm
+DB_USER=osm
+DB_PASSWORD=osm

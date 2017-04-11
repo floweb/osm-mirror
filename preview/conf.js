@@ -1,7 +1,10 @@
-var SETTINGS= {
-    extent:[2.04,43.88,2.22,43.98],
+var SETTINGS = {
+    extent: [-167.7,-59.4,194.8,85.1],
     layers: {
-        '/osm/{z}/{x}/{y}.png': '/osm/{z}/{x}/{y}.png',
-    }
+'/grayscale/{z}/{x}/{y}.png': '/grayscale/{z}/{x}/{y}.png',
+'/osm/{z}/{x}/{y}.png': '/osm/{z}/{x}/{y}.png',
+'/osmbright/{z}/{x}/{y}.png': '/osmbright/{z}/{x}/{y}.png',
+'/osmlight/{z}/{x}/{y}.png': '/osmlight/{z}/{x}/{y}.png',
+'/osmstreets/{z}/{x}/{y}.png': '/osmstreets/{z}/{x}/{y}.png',
+}
 };
-

@@ -9,10 +9,10 @@ function echo_error () {
 }
 
 
-OSM_MIRROR_CONF=/etc/default/openstreetmap-conf
-RENDERD_CONF=/etc/renderd.conf
-STYLES_PATH=/etc/mapnik-osm-data/makina
-PREVIEW_CONF=/var/www/conf.js
+OSM_MIRROR_CONF=./osm-conf
+RENDERD_CONF=./renderd.conf
+STYLES_PATH=./makina
+PREVIEW_CONF=./preview/conf.js
 
 source $OSM_MIRROR_CONF
 

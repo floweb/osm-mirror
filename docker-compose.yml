@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+    osm:
+        build: .
+        volumes:
+            - ./styles:/etc/mapnik-osm-data/makina
+            - ./renderd.conf:/etc/renderd.conf
+            - ./preview:/var/www/
+        ports:
+            - 8888:80
+        # environment:
+            # - EXTENT:-167.7,-59.4,194.8,85.1
+            # - DB_HOST:osm-db
+            # - DB_NAME:osm
+            # - DB_USER:osm
+            # - DB_PASSWORD:osm

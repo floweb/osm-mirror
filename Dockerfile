@@ -16,9 +16,10 @@ ENV PREVIEW_CONF /var/www/conf.js
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
     apt-get install -y git curl wget libgdal1h gdal-bin mapnik-utils unzip \
-    apache2 dpkg-dev debhelper apache2-dev \
+    apache2 dpkg-dev debhelper apache2-dev supervisor \
     libmapnik-dev autoconf automake m4 libtool libcurl4-gnutls-dev \
-    libcairo2-dev apache2-mpm-event && rm -rf /var/lib/apt/lists/*
+    libcairo2-dev apache2-mpm-event && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install software
 RUN git clone --recursive --depth=50 https://github.com/floweb/osm-mirror && \
@@ -32,44 +33,38 @@ RUN mkdir -p $OSM_DATA && \
     rm -rf $OSM_DATA/ne_10m_populated_places_fixed.* && \
     curl -L -o "/tmp/ne_10m_populated_places.zip" "http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_populated_places.zip" && \
     unzip -qqu /tmp/ne_10m_populated_places.zip -d /tmp && \
-    rm /tmp/ne_10m_populated_places.zip && \
     mv /tmp/ne_10m_populated_places.* $OSM_DATA/ && \
     ogr2ogr $OSM_DATA/ne_10m_populated_places_fixed.shp $OSM_DATA/ne_10m_populated_places.shp && \
-    
+
     curl -L -o "/tmp/simplified-land-polygons-complete-3857.zip" "http://data.openstreetmapdata.com/simplified-land-polygons-complete-3857.zip" && \
     unzip -qqu /tmp/simplified-land-polygons-complete-3857.zip simplified-land-polygons-complete-3857/simplified_land_polygons.* -d /tmp && \
-    rm /tmp/simplified-land-polygons-complete-3857.zip && \
     mv /tmp/simplified-land-polygons-complete-3857/simplified_land_polygons.* $OSM_DATA/ && \
 
     curl -L -o "/tmp/land-polygons-split-3857.zip" "http://data.openstreetmapdata.com/land-polygons-split-3857.zip" && \
     unzip -qqu /tmp/land-polygons-split-3857.zip -d /tmp && \
-    rm /tmp/land-polygons-split-3857.zip && \
     mv /tmp/land-polygons-split-3857/land_polygons.* $OSM_DATA/ && \
 
     curl -L -o "/tmp/coastline-good.zip" "http://tilemill-data.s3.amazonaws.com/osm/coastline-good.zip" && \
     unzip -qqu /tmp/coastline-good.zip -d /tmp && \
-    rm /tmp/coastline-good.zip && \
     mv /tmp/coastline-good.* $OSM_DATA/ && \
 
     curl -L -o "/tmp/shoreline_300.tar.bz2" "http://tile.openstreetmap.org/shoreline_300.tar.bz2" && \
     tar -xf /tmp/shoreline_300.tar.bz2 -C /tmp && \
-    rm /tmp/shoreline_300.tar.bz2 && \
     mv /tmp/shoreline_300.* $OSM_DATA/ && \
-    
+
     curl -L -o "/tmp/world_boundaries-spherical.tgz" "http://planet.openstreetmap.org/historical-shapefiles/world_boundaries-spherical.tgz" && \
     tar -xf /tmp/world_boundaries-spherical.tgz -C /tmp && \
-    rm /tmp/world_boundaries-spherical.tgz && \
     mv /tmp/world_boundaries/builtup_area.* $OSM_DATA/ && \
 
     curl -L -o "/tmp/ne_110m_admin_0_boundary_lines_land.zip" "http://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_boundary_lines_land.zip" && \
     unzip -qqu /tmp/ne_110m_admin_0_boundary_lines_land.zip -d /tmp && \
-    rm /tmp/ne_110m_admin_0_boundary_lines_land.zip && \
     mv /tmp/ne_110m_admin_0_boundary_lines_land.* $OSM_DATA/ && \
 
     curl -L -o "/tmp/10m-land.zip" "http://mapbox-geodata.s3.amazonaws.com/natural-earth-1.3.0/physical/10m-land.zip" && \
     unzip -qqu /tmp/10m-land.zip -d /tmp && \
-    rm /tmp/10m-land.zip && \
-    mv /tmp/10m-land.* $OSM_DATA/
+    mv /tmp/10m-land.* $OSM_DATA/ && \
+
+    rm -rf /tmp/*
 
 RUN shapeindex --shape_files \
     $OSM_DATA/simplified_land_polygons.shp \
@@ -87,8 +82,12 @@ RUN shapeindex --shape_files \
 # Deploy map styles...
 # RUN mkdir -p $STYLES_PATH && cp -R styles/* $STYLES_PATH
 
-COPY httpd-foreground /usr/local/bin/
+# Setup renderd
+RUN install --owner=www-data --group=www-data -d /var/run/renderd
+
+# Setup supervisord
+COPY supervisord.conf /etc/supervisord.conf
 
 EXPOSE 80
 
-CMD ["httpd-foreground"]
+CMD ["/usr/bin/supervisord", "--nodaemon", "--configuration=/etc/supervisord.conf"]

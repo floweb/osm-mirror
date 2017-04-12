@@ -3,6 +3,8 @@ version: '2'
 services:
     osm:
         build: .
+        # image: floweb/osm-mirror
+        container_name: osm
         volumes:
             - ./styles:/etc/mapnik-osm-data/makina
             - ./renderd.conf:/etc/renderd.conf

@@ -18,7 +18,7 @@ RUN apt-get update && \
     apt-get install -y git curl wget libgdal1h gdal-bin mapnik-utils unzip \
     apache2 dpkg-dev debhelper apache2-dev supervisor \
     libmapnik-dev autoconf automake m4 libtool libcurl4-gnutls-dev \
-    libcairo2-dev apache2-mpm-event && \
+    libcairo2-dev apache2-mpm-event osm2pgsql && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install software

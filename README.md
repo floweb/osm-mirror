@@ -133,6 +133,13 @@ Known limitations
 * All stylesheets and scripts use *localhost* internally, which means that database and tiles rendering should happen on the same server.
 
 
+Docker support
+--------------
+
+To import data in your osm-db container, just use the following command:
+
+``docker-compose exec osm osm2pgsql -d osm -H osm-db -U osm -W --extra-attributes -c /import/france-latest.osm.bz2``
+
 
 Credits
 -------
@@ -146,5 +153,6 @@ Authors
 
 * Frédéric Bonifas
 * Mathieu Leplâtre
+* Florian Le Frioux (Docker support)
 
 [![Makina Corpus](http://depot.makina-corpus.org/public/logo.gif)](http://makinacorpus.com)

@@ -138,7 +138,7 @@ Docker support
 
 To import data in your osm-db container, just use the following command:
 
-``docker-compose exec osm osm2pgsql -d osm -H osm-db -U osm -W --extra-attributes -c /import/france-latest.osm.bz2``
+``docker-compose exec osm osm2pgsql -d osm -H osm-db -U osm -W --extra-attributes -C 20000 -c /import/france-latest.osm.bz2``
 
 
 Credits
